@@ -1,0 +1,131 @@
+
+<div class="layui-fluid">
+  <div class="layui-col-space15">
+    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+      <div class="layui-card">
+        <div class="layui-card-header">
+          <h3>
+            <b>系统信息总览</b>
+          </h3>
+        </div>
+        <div class="layui-card-body layui-row">
+          <script type="text/html" template lay-url="/api/systeminfo/" lay-type="post">
+            <div class="layui-col-xs12 layui-col-xs6 layui-col-sm3">
+              <b style="color: #424242">系统类型</b>
+              <p style="color: #424242">{{d.data.platform}}</p>
+            </div>
+            <div class="layui-col-xs12 layui-col-xs6 layui-col-sm3">
+              <b style="color: #424242">系统版本</b>
+              <p style="color: #424242">{{d.data.version}}</p>
+            </div>
+            <div class="layui-col-xs12 layui-col-xs6 layui-col-sm3">
+              <b style="color: #424242">发布版本</b>
+              <p style="color: #424242">{{d.data.release}}</p>
+            </div>
+            <div class="layui-col-xs12 layui-col-xs6 layui-col-sm3">
+              <b style="color: #424242">计算机名称</b>
+              <p style="color: #424242">{{d.data.name}}</p>
+            </div>
+            <div class="layui-col-xs12 layui-col-xs6 layui-col-sm3">
+              <b style="color: #424242">内存使用数值</b>
+              <p id="MemoryUsageValues" style="color: #424242"></p>
+            </div>
+            <div class="layui-col-xs12 layui-col-xs6 layui-col-sm3">
+              <b style="color: #424242">核心数量</b>
+              <p style="color: #424242">{{d.data.cpu_count}}</p>
+            </div>
+            <div class="layui-col-xs12 layui-col-xs6 layui-col-md3">
+              <b style="color: #424242">python版本</b>
+              <p style="color: #424242">{{d.data.pythonVersion}}</p>
+            </div>
+            <div class="layui-col-xs12 layui-col-xs6 layui-col-md3">
+              <b style="color: #424242">django版本</b>
+               <p style="color: #424242">{{d.data.djangoVersion}}</p>
+            </div>
+          </script>
+        </div>
+      </div>
+    </div>
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-xs12 layui-col-sm6 layui-col-md6">
+        <div class="layui-card">
+          <div class="layui-card-header">CPU使用率</div>
+          <div class="layui-card-body layadmin-takerates">
+            <div id="cpu" class="layui-progress" lay-showPercent="yes" lay-filter="cpu-progress">
+              <h3>CPU使用率</h3>
+              <div class="layui-progress-bar" lay-percent="0%">
+                <span class="layui-progress-text" lay-filter="cpu-progress"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="layui-col-xs12 layui-col-sm6 layui-col-md6">
+        <div class="layui-card">
+          <div class="layui-card-header">内存占用率</div>
+          <div class="layui-card-body layadmin-takerates">
+            <div id="ram" class="layui-progress" lay-showPercent="yes" lay-filter="ram-progress">
+              <h3>内存占用率</h3>
+              <div class="layui-progress-bar" lay-percent="0%">
+                <span class="layui-progress-text" lay-filter="ram-progress"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="layui-row layui-col-space15" id="cpus"></div>
+      <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header">数据概览</div>
+          <div class="layui-card-body">
+            <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade" lay-filter="LAY-index-dataview">
+              <div carousel-item id="LAY-index-dataview">
+                <div><i class="layui-icon layui-icon-loading1 layadmin-loading" style="height: 500px"></i></div>
+                <div></div>
+                <div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{#<script type="text/template" id="templ-cpu">#}
+{#  {{# layui.each(d, function(index, item) { }}#}
+{#  <div class="layui-col-xs12 layui-col-sm6 layui-col-md6">#}
+{#    <div class="layui-card">#}
+{#      <div class="layui-card-header">cpu核心{{index+1}}</div>#}
+{#      <div class="layui-card-body layadmin-takerates">#}
+{#        <div id="cpu1" class="layui-progress" lay-showPercent="yes" lay-filter="cpu1-progress">#}
+{#          <h3>cpu核心{{index+1}}占用率</h3>#}
+{#          <div class="layui-progress-bar" lay-percent="{{item}}%">#}
+{#            <span class="layui-progress-text" lay-filter="cpu1-progress">{{item}}%</span>#}
+{#          </div>#}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
+{#  </div>#}
+{#  {{# }) }}#}
+{#</script>#}
+
+<script>
+    layui.use('console', layui.factory('console'));
+  //加载 controller 目录下的对应模块
+  /*
+
+    小贴士：
+      这里 console 模块对应 的 console.js 并不会重复加载，
+      然而该页面的视图则是重新插入到容器，那如何保证能重新来控制视图？有两种方式：
+        1): 借助 layui.factory 方法获取 console 模块的工厂（回调函数）给 layui.use
+        2): 直接在 layui.use 方法的回调中书写业务代码，即:
+            layui.use('console', function(){
+              //同 console.js 中的 layui.define 回调中的代码
+            });
+
+    这里我们采用的是方式1。其它很多视图中采用的其实都是方式2，因为更简单些，也减少了一个请求数。
+   */
+</script>
+
