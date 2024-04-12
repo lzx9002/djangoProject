@@ -1,0 +1,1 @@
+### Please install the libraries: django, PyMySQL, MySQL, mysqlclient first
