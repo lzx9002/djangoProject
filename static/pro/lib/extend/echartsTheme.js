@@ -151,7 +151,7 @@ layui.define(function(exports) {
     line: {
       smooth : true,
       symbol: 'emptyCircle',  // 拐点图形类型
-      symbolSize: 3       // 拐点图形大小
+      symbolSize: 4       // 拐点图形大小
     },
     
     // K线图默认参数

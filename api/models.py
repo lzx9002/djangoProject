@@ -20,8 +20,3 @@ class User_name_list(models.Model):
     remarks = models.TextField(max_length=500, null=True, blank=True)
     role = models.OneToOneField(User_role_list, on_delete=models.CASCADE)
 
-
-class System_usage(models.Model):
-    time = models.DateTimeField(auto_now=True)
-    cpu = models.FloatField(null=True, blank=True)
-    memory = models.FloatField(null=True, blank=True)

@@ -1,37 +1,24 @@
-import pymysql
 import time
 from psutil import virtual_memory, cpu_percent
-from djangoProject.settings import DATABASES
 
-default = {
-    'host': DATABASES['default']['HOST'],
-    'user': DATABASES['default']['USER'],
-    'password': DATABASES['default']['PASSWORD'],
-    'port': DATABASES['default']['PORT'],
-    'db': DATABASES['default']['NAME'],
-    'charset': 'utf8',
+histories = {
+    "time": [],
+    "cpu": [],
+    "memory": []
 }
-conn = pymysql.connect(**default)
-cur = conn.cursor()
 
-
-def saveCpuUsage():
-    cpu = cpu_percent(interval=1)
-    memory = virtual_memory().percent
-    now_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    sql = "\
-        INSERT INTO django.api_system_usage (time, cpu, memory) \
-        VALUES ('%s', %s, %s)" % \
-        (now_time, cpu, memory)
-    try:
-        cur.execute(sql)  # 执行插入的sql语句
-        conn.commit()  # 提交到数据库执行
-    except:
-        conn.rollback()  # 如果发生错误则回滚
-    # conn.close()  # 关闭数据库连接
+for n in range(0, 600):
+    histories["time"].append('')
+    histories["cpu"].append(0)
+    histories["memory"].append(0)
 
 
 def cpuUsableRecorder():
     while True:
-        saveCpuUsage()
-        time.sleep(8)
+        if len(histories["time"]) > 600:
+            del histories["time"][0]
+            del histories["cpu"][0]
+            del histories["memory"][0]
+        histories["cpu"].append(cpu_percent(interval=1))
+        histories["memory"].append(virtual_memory().percent)
+        histories["time"].append(time.strftime("%H:%M:%S", time.localtime()))

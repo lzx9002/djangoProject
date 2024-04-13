@@ -1,4 +1,11 @@
 
+<style>
+  .system-usage {
+    width: 100%;
+    height: 300px;
+  }
+</style>
+
 <div class="layui-fluid">
   <div class="layui-col-space15">
     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
@@ -28,7 +35,7 @@
             </div>
             <div class="layui-col-xs12 layui-col-xs6 layui-col-sm3">
               <b style="color: #424242">内存使用数值</b>
-              <p id="MemoryUsageValues" style="color: #424242"></p>
+              <p id="MemoryUsageValues" style="color: #424242">获取中</p>
             </div>
             <div class="layui-col-xs12 layui-col-xs6 layui-col-sm3">
               <b style="color: #424242">核心数量</b>
@@ -78,12 +85,8 @@
         <div class="layui-card">
           <div class="layui-card-header">数据概览</div>
           <div class="layui-card-body">
-            <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade" lay-filter="LAY-index-dataview">
-              <div carousel-item id="LAY-index-dataview">
-                <div><i class="layui-icon layui-icon-loading1 layadmin-loading" style="height: 500px"></i></div>
-                <div></div>
-                <div></div>
-              </div>
+            <div class="system-usage" id="LAY-index-dataview">
+              <div><i class="layui-icon layui-icon-loading1 layadmin-loading" style="height: 500px"></i></div>
             </div>
           </div>
         </div>
@@ -91,25 +94,6 @@
     </div>
   </div>
 </div>
-
-
-{#<script type="text/template" id="templ-cpu">#}
-{#  {{# layui.each(d, function(index, item) { }}#}
-{#  <div class="layui-col-xs12 layui-col-sm6 layui-col-md6">#}
-{#    <div class="layui-card">#}
-{#      <div class="layui-card-header">cpu核心{{index+1}}</div>#}
-{#      <div class="layui-card-body layadmin-takerates">#}
-{#        <div id="cpu1" class="layui-progress" lay-showPercent="yes" lay-filter="cpu1-progress">#}
-{#          <h3>cpu核心{{index+1}}占用率</h3>#}
-{#          <div class="layui-progress-bar" lay-percent="{{item}}%">#}
-{#            <span class="layui-progress-text" lay-filter="cpu1-progress">{{item}}%</span>#}
-{#          </div>#}
-{#        </div>#}
-{#      </div>#}
-{#    </div>#}
-{#  </div>#}
-{#  {{# }) }}#}
-{#</script>#}
 
 <script>
     layui.use('console', layui.factory('console'));

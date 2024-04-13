@@ -15,31 +15,92 @@ layui.define(function(exports){
   */
 
 
-  //区块轮播切换
-  layui.use(['admin', 'carousel'], function(){
-    var $ = layui.$
-    ,admin = layui.admin
-    ,carousel = layui.carousel
-    ,element = layui.element
-    ,device = layui.device();
+  // //区块轮播切换
+  // layui.use(['admin', 'carousel'], function(){
+  //   var $ = layui.$
+  //   ,admin = layui.admin
+  //   ,carousel = layui.carousel
+  //   ,element = layui.element
+  //   ,device = layui.device();
+  //
+  //   //轮播切换
+  //   $('.layadmin-carousel').each(function(){
+  //     var othis = $(this);
+  //     carousel.render({
+  //       elem: this
+  //       ,width: '100%'
+  //       ,arrow: 'none'
+  //       ,interval: othis.data('interval')
+  //       ,autoplay: othis.data('autoplay') === true
+  //       ,trigger: (device.ios || device.android) ? 'click' : 'hover'
+  //       ,anim: othis.data('anim')
+  //     });
+  //   });
+  //
+  //   element.render('progress');
+  //
+  // });
 
-    //轮播切换
-    $('.layadmin-carousel').each(function(){
-      var othis = $(this);
-      carousel.render({
-        elem: this
-        ,width: '100%'
-        ,arrow: 'none'
-        ,interval: othis.data('interval')
-        ,autoplay: othis.data('autoplay') === true
-        ,trigger: (device.ios || device.android) ? 'click' : 'hover'
-        ,anim: othis.data('anim')
-      });
-    });
-
-    element.render('progress');
-
-  });
+  const echartsOptions =
+      {
+          animation: false,
+          title: {
+              text: "服务器系统使用率",
+              x: "center",
+              textStyle: {
+                  fontSize: 14
+              }
+          },
+          tooltip: {
+              trigger: "axis"
+          },
+          legend: {
+              data: [
+                  "",
+                  ""
+              ]
+          },
+          xAxis: [
+              {
+                  type: "category",
+                  boundaryGap: false,
+                  data: []
+              }
+          ],
+          yAxis: [
+              {
+                  type: "value"
+              }
+          ],
+          series: [
+              {
+                  name: "cpu",
+                  type: "line",
+                  smooth: true,
+                  itemStyle: {
+                      normal: {
+                          areaStyle: {
+                              type: "default"
+                          }
+                      }
+                  },
+                  data: []
+              },
+              {
+                  name: "memory",
+                  type: "line",
+                  smooth: true,
+                  itemStyle: {
+                      normal: {
+                          areaStyle: {
+                              type: "default"
+                          }
+                      }
+                  },
+                  data: []
+              }
+          ]
+      };
 
   //数据概览
   layui.use(['admin', 'carousel', 'echarts'], function(){
@@ -47,40 +108,98 @@ layui.define(function(exports){
         , admin = layui.admin
         , carousel = layui.carousel
         , echarts = layui.echarts;
-    admin.req({
-      url: '/api/CPUUsageOverview/',
-      type: 'POST',
-      done: function (data) {
-        let echartsApp = [], options = [data.data]
-            , elemDataView = $('#LAY-index-dataview').children('div')
-            , renderDataView = function (index) {
-            echartsApp[index] = echarts.init(elemDataView[index], layui.echartsTheme);
-            echartsApp[index].setOption(options[index]);
-            //window.onresize = echartsApp[index].resize;
-        admin.resize(function () {
-          echartsApp[index].resize();
-        });
-        }
-        //没找到DOM，终止执行
-        if(!elemDataView[0]) return;
-        renderDataView(0);
-        //监听数据概览轮播
-        var carouselIndex = 0;
-        carousel.on('change(LAY-index-dataview)', function(obj){
-          renderDataView(carouselIndex = obj.index);
-        });
-        //监听侧边伸缩
-        layui.admin.on('side', function(){
-          setTimeout(function(){
-            renderDataView(carouselIndex);
-          }, 300);
-        });
-        //监听路由
-        layui.admin.on('hash(tab)', function(){
-          layui.router().path.join('') || renderDataView(carouselIndex);
-        });
+
+    const $dataview = $('#LAY-index-dataview')
+    const sign = new Date().getTime();
+    $dataview.data('sign', sign);
+
+    var echartsApp = null;
+    function loadHistory() {
+      admin.req({
+        url: '/api/CPUUsageOverview/',
+        type: 'POST',
+        done: function (res) {
+
+          const data = res.data;
+          const options = echartsOptions;
+          options.xAxis[0].data = data.time;
+          options.series[0].data = data.cpu;
+          options.series[1].data = data.memory;
+
+          function renderDataView() {
+
+            echartsApp = echarts.init($dataview[0], layui.echartsTheme);
+            echartsApp.setOption(options);
+
+            //
+            admin.resize(function () {
+              echartsApp.resize();
+            });
+
+            //监听侧边伸缩
+            layui.admin.on('side', function(){
+              // setTimeout(function(){
+              //   renderDataView(carouselIndex);
+              // }, 300);
+              echartsApp = null;
+            });
+
+            //监听路由
+            layui.admin.on('hash(tab)', function(){
+              const url = layui.router().path.join('') ;
+              if (url) echartsApp = null; //|| renderDataView(carouselIndex);
+            });
           }
-    });
+
+          if (!echartsApp) {
+            renderDataView();
+          }  else {
+            // echartsApp.clear();
+            echartsApp.setOption(options);
+          }
+
+
+          // let echartsApp = [], options = [data.data]
+          //     , elemDataView = $('#LAY-index-dataview').children('div')
+          //     , renderDataView = function (index) {
+          //         echartsApp[index] = echarts.init(elemDataView[index], layui.echartsTheme);
+          //         echartsApp[index].setOption(options[index]);
+          //         //window.onresize = echartsApp[index].resize;
+          //         admin.resize(function () {
+          //           echartsApp[index].resize();
+          //         });
+          //     }
+          // //没找到DOM，终止执行
+          // if(!elemDataView[0]) return;
+          // renderDataView(0);
+          // //监听数据概览轮播
+          // var carouselIndex = 0;
+          // carousel.on('change(LAY-index-dataview)', function(obj){
+          //   renderDataView(carouselIndex = obj.index);
+          // });
+          // //监听侧边伸缩
+          // layui.admin.on('side', function(){
+          //   setTimeout(function(){
+          //     renderDataView(carouselIndex);
+          //   }, 300);
+          // });
+          // //监听路由
+          // layui.admin.on('hash(tab)', function(){
+          //   layui.router().path.join('') || renderDataView(carouselIndex);
+          // });
+
+          const sign2 = $dataview.data('sign');
+          if (sign2 === sign) {
+            setTimeout(() => {
+              loadHistory(sign)
+            }, 10000)
+          }
+        }
+      });
+
+    }
+    loadHistory(sign);
+
       //今日流量趋势
       // {
       //   title: {
@@ -185,41 +304,41 @@ layui.define(function(exports){
   });
 
 
-  //最新订单
-  layui.use('table', function(){
-    var $ = layui.$
-    ,table = layui.table;
-
-    //今日热搜
-    table.render({
-      elem: '#LAY-index-topSearch'
-      ,url: './json/console/top-search.js' //模拟接口
-      ,page: true
-      ,cols: [[
-        {type: 'numbers', fixed: 'left'}
-        ,{field: 'keywords', title: '关键词', minWidth: 300, templet: '<div><a href="https://www.baidu.com/s?wd={{ d.keywords }}" target="_blank" class="layui-table-link">{{ d.keywords }}</div>'}
-        ,{field: 'frequency', title: '搜索次数', minWidth: 120, sort: true}
-        ,{field: 'userNums', title: '用户数', sort: true}
-      ]]
-      ,skin: 'line'
-    });
-
-    //今日热贴
-    table.render({
-      elem: '#LAY-index-topCard'
-      ,url: './json/console/top-card.js' //模拟接口
-      ,page: true
-      ,cellMinWidth: 120
-      ,cols: [[
-        {type: 'numbers', fixed: 'left'}
-        ,{field: 'title', title: '标题', minWidth: 300, templet: '<div><a href="{{ d.href }}" target="_blank" class="layui-table-link">{{ d.title }}</div>'}
-        ,{field: 'username', title: '发帖者'}
-        ,{field: 'channel', title: '类别'}
-        ,{field: 'crt', title: '点击率', sort: true}
-      ]]
-      ,skin: 'line'
-    });
-  });
+  // //最新订单
+  // layui.use('table', function(){
+  //   var $ = layui.$
+  //   ,table = layui.table;
+  //
+  //   //今日热搜
+  //   table.render({
+  //     elem: '#LAY-index-topSearch'
+  //     ,url: './json/console/top-search.js' //模拟接口
+  //     ,page: true
+  //     ,cols: [[
+  //       {type: 'numbers', fixed: 'left'}
+  //       ,{field: 'keywords', title: '关键词', minWidth: 300, templet: '<div><a href="https://www.baidu.com/s?wd={{ d.keywords }}" target="_blank" class="layui-table-link">{{ d.keywords }}</div>'}
+  //       ,{field: 'frequency', title: '搜索次数', minWidth: 120, sort: true}
+  //       ,{field: 'userNums', title: '用户数', sort: true}
+  //     ]]
+  //     ,skin: 'line'
+  //   });
+  //
+  //   //今日热贴
+  //   table.render({
+  //     elem: '#LAY-index-topCard'
+  //     ,url: './json/console/top-card.js' //模拟接口
+  //     ,page: true
+  //     ,cellMinWidth: 120
+  //     ,cols: [[
+  //       {type: 'numbers', fixed: 'left'}
+  //       ,{field: 'title', title: '标题', minWidth: 300, templet: '<div><a href="{{ d.href }}" target="_blank" class="layui-table-link">{{ d.title }}</div>'}
+  //       ,{field: 'username', title: '发帖者'}
+  //       ,{field: 'channel', title: '类别'}
+  //       ,{field: 'crt', title: '点击率', sort: true}
+  //     ]]
+  //     ,skin: 'line'
+  //   });
+  // });
   layui.use(['admin', 'carousel', 'echarts', 'laytpl'], function(){
     // let { $, admin , carousel, echarts, element, laytpl } = layui;
     let $ = layui.$,
@@ -240,7 +359,8 @@ layui.define(function(exports){
     const sign = new Date().getTime();
     Info.cpu.data('sign', sign);
     function refresh(sign) {
-      admin.req({url: '/api/cpuMemoryInfo/'
+      admin.req({
+        url: '/api/cpuMemoryInfo/'
         ,type: 'post'
         ,done: function(res) {
 
