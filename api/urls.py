@@ -19,7 +19,6 @@ from . import views
 
 urlpatterns = [
     re_path(r'^login/', views.login_api),
-    re_path(r'^logout/', views.logout_api),
     re_path(r'^userinfo/', views.userinfo),
     re_path(r'^systeminfo/', views.systeminfo),
     re_path(r'^cpuMemoryInfo/', views.cpuMemoryInfo),

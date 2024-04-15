@@ -4,9 +4,11 @@ import django
 import psutil
 from decimal import Decimal
 from django.http import HttpResponse, JsonResponse
+from django.utils.datastructures import MultiValueDictKeyError
 from django.views.decorators.csrf import csrf_exempt
 from api.models import User_name_list
 from cpuUsage import histories
+
 
 # Create your views here.
 
@@ -37,39 +39,33 @@ def login_api(request):
 @csrf_exempt
 def userinfo(request):
     if request.method == 'POST':
-        token = request.POST['token']
-        rows = User_name_list.objects.filter(username=token)
-        if rows:
-            return JsonResponse({
-                "code": 0,
-                "msg": "",
-                "data": {"role": rows[0].role.id,
-                         "username": token,
-                         "user": rows[0].nickname,
-                         "sex": rows[0].sex,
+        try:
+            token = request.POST['token']
+        except KeyError:
+            pass
+        else:
+            rows = User_name_list.objects.filter(username=token)
+            if rows:
+                return JsonResponse({
+                    "code": 0,
+                    "msg": "",
+                    "data": {"role": rows[0].role.id,
+                             "username": token,
+                             "user": rows[0].nickname,
+                             "sex": rows[0].sex,
 
-                         }
+                             }
+                })
+            return JsonResponse({
+                "code": 401,
+                "msg": '未登录',
+                "data": {}
             })
         return JsonResponse({
             "code": 401,
             "msg": '未登录',
             "data": {}
         })
-    return JsonResponse({
-        "code": 401,
-        "msg": '未登录',
-        "data": {}
-    })
-
-
-def logout_api(request):
-    if request.method == 'POST':
-        response = HttpResponse('{"code": 0}')
-        response.delete_cookie('password')
-        response.delete_cookie('username')
-        return response
-
-    return HttpResponse("")
 
 
 def systeminfo(request):
@@ -83,10 +79,11 @@ def systeminfo(request):
                 "release": platform.release(),
                 "name": platform.node(),
                 "cpu_count": psutil.cpu_count(),
-                "TotalMemory": Decimal(psutil.virtual_memory().total / 1024 / 1024 / 1024).quantize(Decimal("0.01"),
-                                                                                                    rounding="ROUND_HALF_UP"),
-                "MemoryUsageRate": Decimal(psutil.virtual_memory().used / 1024 / 1024 / 1024).quantize(Decimal("0.01"),
-                                                                                                       rounding="ROUND_HALF_UP"),
+                "TotalMemory": int(Decimal(psutil.virtual_memory().total / 1024 / 1024 / 1024).quantize(Decimal("0.01"),
+                                                                                                        rounding="ROUND_HALF_UP")),
+                "MemoryUsageRate": int(
+                    Decimal(psutil.virtual_memory().used / 1024 / 1024 / 1024).quantize(Decimal("0.01"),
+                                                                                        rounding="ROUND_HALF_UP")),
                 "processor": platform.processor(),
                 "pythonVersion": platform.python_version(),
                 "djangoVersion": django.__version__,
