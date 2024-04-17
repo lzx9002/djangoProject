@@ -18,7 +18,7 @@ layui.define(['table', 'form'], function(exports){
   //用户管理
   table.render({
     elem: '#LAY-user-manage'
-    ,url: '/static/pro/json/useradmin/webuser.js' //模拟接口
+    ,url: '/api/userlist/' //模拟接口
     ,cols: [[
       {type: 'checkbox', fixed: 'left'}
       ,{field: 'id', width: 100, title: 'ID', sort: true}
@@ -27,7 +27,6 @@ layui.define(['table', 'form'], function(exports){
       ,{field: 'phone', title: '手机'}
       ,{field: 'email', title: '邮箱'}
       ,{field: 'sex', width: 80, title: '性别'}
-      ,{field: 'ip', title: 'IP'}
       ,{field: 'jointime', title: '加入时间', sort: true}
       ,{title: '操作', width: 150, align:'center', fixed: 'right', toolbar: '#table-useradmin-webuser'}
     ]]

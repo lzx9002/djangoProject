@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -15,7 +17,8 @@
   <div id="LAY_app"></div>
   <script src="/static/layui/layui.js"></script>
   <script>
-  layui.config({
+      import layui from "/layui/layui.js"
+      layui.config({
     base: '/static/pro/' //指定 layuiAdmin 项目路径，本地开发用 src，线上用 dist
     ,version: '1.4.0'
   }).use('index');

@@ -20,14 +20,14 @@
             <div class="layui-form-item">
               <label class="layui-form-label">我的角色</label>
               <div class="layui-input-inline">
-                <select name="role" lay-verify="">
-                  <option value="1" selected>超级管理员</option>
-                  <option value="2" disabled>普通管理员</option>
-                  <option value="3" disabled>审核员</option>
-                  <option value="4" disabled>编辑人员</option>
+                <select id="role" name="role" lay-verify="">
+                  <option value="1" >超级管理员</option>
+                  <option value="2" >普通管理员</option>
+                  <option value="3" >审核员</option>
+                  <option value="4" >编辑人员</option>
                 </select> 
               </div>
-              <div class="layui-form-mid layui-word-aux">当前角色不可更改为其它角色</div>
+              <div class="layui-form-mid layui-word-aux" style="display: none">当前角色不可更改为其它角色</div>
             </div>
             <div class="layui-form-item">
               <label class="layui-form-label">用户名</label>
@@ -52,7 +52,7 @@
             <div class="layui-form-item">
               <label class="layui-form-label">头像</label>
               <div class="layui-input-inline">
-                <input name="avatar" lay-verify="required" id="LAY_avatarSrc" placeholder="图片地址" value="http://cdn.layui.com/avatar/168.jpg" class="layui-input">
+                <input name="avatar" lay-verify="required" id="LAY_avatarSrc" placeholder="图片地址" class="layui-input">
               </div>
               <div class="layui-input-inline layui-btn-container" style="width: auto;">
                 <button type="button" class="layui-btn layui-btn-primary" id="LAY_avatarUpload">
@@ -64,19 +64,19 @@
             <div class="layui-form-item">
               <label class="layui-form-label">手机</label>
               <div class="layui-input-inline">
-                <input type="text" name="cellphone" value="" lay-verify="phone" autocomplete="off" class="layui-input">
+                <input type="text" id="cellphone" name="cellphone" lay-verify="phone" autocomplete="off" class="layui-input">
               </div>
             </div>
             <div class="layui-form-item">
               <label class="layui-form-label">邮箱</label>
               <div class="layui-input-inline">
-                <input type="text" name="email" value="" lay-verify="email" autocomplete="off" class="layui-input">
+                <input type="text" id="email" name="email" lay-verify="email" autocomplete="off" class="layui-input">
               </div>
             </div>
             <div class="layui-form-item layui-form-text">
               <label class="layui-form-label">备注</label>
               <div class="layui-input-block">
-                <textarea name="remarks" placeholder="请输入内容" class="layui-textarea"></textarea>
+                <textarea id="remarks" name="remarks" placeholder="请输入内容" class="layui-textarea"></textarea>
               </div>
             </div>
             <div class="layui-form-item">
@@ -94,37 +94,5 @@
 </div>
 
 <script>
-  // admin.req({
-  //   // url: '/static/pro/json/user/login.js' //实际使用请改成服务端真实接口
-  //   url: '/api/userinfo/'
-  //   ,type: 'post'
-  //   ,done: function(res) {
-  //     $('#username').val(res.data.username)
-  //     $('#nickname').val(res.data.user);
-  //     if (res.data.sex === 'man') {
-  //       $('#sex_man').attr("checked",true);
-  //     }
-  //     else if (res.data.sex === 'female') {
-  //       $('#sex_female').attr("checked",true);
-  //     }
-  //     $("#sex_man").removeAttr("checked");
-  //     $("#sex_female").removeAttr("checked");
-  //   }
-  // });
-  const $ = layui.$;
-  const res = layui.data('layuiAdmin').userdata;
-  console.log(res);
-  $('#username').val(res.username)
-  $('#nickname').val(res.user);
-  if (res.sex === 'man') {
-    $('#sex_man').attr("checked",true);
-  }
-  else if (res.sex === 'female') {
-    $('#sex_female').attr("checked",true);
-  }
-  $("#sex_man").removeAttr("checked");
-  $("#sex_female").removeAttr("checked");
-
-
 layui.use('set', layui.factory('set'));
 </script>

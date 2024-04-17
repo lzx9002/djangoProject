@@ -18,15 +18,39 @@ layui.define(['form', 'upload'], function(exports){
   ,upload = layui.upload;
 
   var $body = $('body');
-  //
-  // admin.req({
-  //   // url: '/static/pro/json/user/login.js' //实际使用请改成服务端真实接口
-  //   url: '/api/userinfo/'
-  //   ,done: function(res) {
-  //     $('#username').val(res.data.username)
-  //     $('#nickname').val(res.data.nickname);
-  //   }
-  // });
+
+  admin.req({
+    url: '/api/userinfo/'
+    ,done: function(res) {
+      console.log(res);
+      $('#username').val(res.data.username)
+      $('#nickname').val(res.data.user);
+
+
+      $('#sex_man').attr("checked",res.data.sex === 'man');
+      $('#sex_female').attr("checked",res.data.sex !== 'man');
+
+      $('#LAY_avatarSrc').val(window.location.protocol+'//'+window.location.host+res.data.avatar);
+
+      $('#cellphone').val(res.data.cellphone);
+
+      $('#email').val(res.data.email);
+
+      $('#remarks').val(res.data.remarks);
+
+      $("#role option[selected]").removeAttr("selected");
+      $("#role option[value="+res.data.role+"]").attr("selected", "selected");
+      $("#role option").each(function(){
+
+        const $item = $(this);
+        const value = Number($item.attr('value'));
+        const disabled = (value !== res.data.role);
+        $item.attr('disabled', disabled)
+      });
+
+      form.render();
+    }
+  });
 
   form.render();
   
@@ -114,11 +138,12 @@ layui.define(['form', 'upload'], function(exports){
   //上传头像
   var avatarSrc = $('#LAY_avatarSrc');
   upload.render({
-    url: '/api/upload/'
+    url: '/api/upload_avatar/'
+    ,data: {token: layui.data(setter.tableName).token}
     ,elem: '#LAY_avatarUpload'
     ,done: function(res){
-      if(res.status == 0){
-        avatarSrc.val(res.url);
+      if(res.code === 0){
+        avatarSrc.val(window.location.protocol+'//'+window.location.host+res.data.url);
       } else {
         layer.msg(res.msg, {icon: 5});
       }

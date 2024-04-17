@@ -13,8 +13,8 @@ class name_role_listAdmin(admin.ModelAdmin):
 
 @admin.register(User_name_list)
 class name_listAdmin(admin.ModelAdmin):
-    list_display = ('id', 'username', 'password', 'nickname', 'sex', 'cellphone', 'email',)
-    search_fields = ('id', 'username', 'password', 'nickname', 'sex', 'cellphone', 'email',)
+    list_display = ('id', 'username', 'password', 'nickname', 'sex', 'cellphone', 'email', 'jointime',)
+    search_fields = ('id', 'username', 'password', 'nickname', 'sex', 'cellphone', 'email', 'jointime',)
     ordering = ('username', 'role',)
 
 

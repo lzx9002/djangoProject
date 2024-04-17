@@ -57,14 +57,8 @@
         </a>
       </li>
         <li class="layui-nav-item" lay-unselect>
-        <script type="text/html" template lay-url="/api/userinfo/" lay-type="post"
+        <script type="text/html" template lay-url="/api/userinfo/"
         lay-done="layui.element.render('nav', 'layadmin-layout-right');">
-          {{#
-            layui.data('layuiAdmin', {
-              key: 'userdata'
-              ,value: d.data
-            })
-          }}
           <a href="javascript:;">
             <cite>{{ d.data.username }}</cite>
           </a>

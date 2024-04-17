@@ -20,6 +20,8 @@ from . import views
 urlpatterns = [
     re_path(r'^login/', views.login_api),
     re_path(r'^userinfo/', views.userinfo),
+    re_path(r'^userlist/', views.userList),
+    re_path(r'upload_avatar/', views.upload_avatar),
     re_path(r'^systeminfo/', views.systeminfo),
     re_path(r'^cpuMemoryInfo/', views.cpuMemoryInfo),
     re_path(r'^CPUUsageOverview/', views.CPUUsageOverview),

@@ -14,9 +14,10 @@ class User_name_list(models.Model):
     password = models.CharField(max_length=128, null=False)
     nickname = models.CharField(max_length=150, null=False, blank=False)
     sex = models.CharField(max_length=50, null=False, blank=False)
-    avatar = models.URLField(max_length=100, null=True, blank=True)
+    avatar = models.ImageField(upload_to='users', max_length=100, null=True, blank=True)
     cellphone = models.BigIntegerField(null=True, blank=True)
     email = models.EmailField(max_length=100, null=True, blank=True)
     remarks = models.TextField(max_length=500, null=True, blank=True)
     role = models.OneToOneField(User_role_list, on_delete=models.CASCADE)
+    jointime = models.DateTimeField(auto_now_add=True)
 
