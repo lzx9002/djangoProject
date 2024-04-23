@@ -3,10 +3,6 @@
 import os
 import sys
 
-import threading
-
-import djangoProject.cpuUsage as cpuUsage
-
 
 def main():
     """Run administrative tasks."""

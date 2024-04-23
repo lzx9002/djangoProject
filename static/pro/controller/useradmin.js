@@ -63,11 +63,16 @@ layui.define(['table', 'form'], function(exports){
             //监听提交
             form.on('submit(LAY-user-front-submit)', function(data){
               var field = data.field; //获取提交的字段
+              admin.req({
+                url: '/api/upload_user_info/'
+                ,type: "POST"
+                ,data: field
+                ,done: function(){
+                  layui.table.reload('LAY-user-manage'); //重载表格
+                  layer.close(index); //执行关闭
+                }
+              });
 
-              //提交 Ajax 成功后，关闭当前弹层并重载表格
-              //$.ajax({});
-              layui.table.reload('LAY-user-manage'); //重载表格
-              layer.close(index); //执行关闭 
             });
           });
         }

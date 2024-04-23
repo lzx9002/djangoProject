@@ -5,7 +5,7 @@
     <label class="layui-form-label">用户名</label>
     <div class="layui-input-inline">
       <script type="text/html" template>
-        <input type="text" name="username" value="{{ d.params.username || '' }}" lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+        <input type="text" name="nickname" value="{{ d.params.username || '' }}" lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
       </script>
     </div>
   </div>
@@ -13,7 +13,7 @@
     <label class="layui-form-label">手机号码</label>
     <div class="layui-input-inline">
       <script type="text/html" template>
-        <input type="text" name="phone" value="{{ d.params.phone || '' }}" lay-verify="phone" placeholder="请输入号码" autocomplete="off" class="layui-input">
+        <input type="text" name="cellphone" value="{{ d.params.phone || '' }}" lay-verify="phone" placeholder="请输入号码" autocomplete="off" class="layui-input">
       </script>
     </div>
   </div>
@@ -55,17 +55,19 @@
 layui.use(['admin', 'form', 'upload'], function(){
   var $ = layui.$
   ,form = layui.form
+  ,setter = layui.setter
   ,upload = layui.upload;
   
   //上传头像
   upload.render({
     elem: '#layuiadmin-upload-useradmin'
-    ,url: '/static/pro/json/upload/demo.js'
+    ,url: '/api/upload_avatar/'
+    ,data: {token: layui.data(setter.tableName).token}
     ,accept: 'images'
     ,method: 'get'
     ,acceptMime: 'image/*'
     ,done: function(res){
-      $(this.item).prev("div").children("input").val(res.data.src)
+      $(this.item).prev("div").children("input").val(window.location.protocol+'//'+window.location.host+res.data.url)
     }
   });
 })

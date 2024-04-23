@@ -16,44 +16,6 @@ layui.define(['form', 'upload'], function(exports){
   ,admin = layui.admin
   ,form = layui.form
   ,upload = layui.upload;
-
-  var $body = $('body');
-
-  admin.req({
-    url: '/api/userinfo/'
-    ,done: function(res) {
-      console.log(res);
-      $('#username').val(res.data.username)
-      $('#nickname').val(res.data.user);
-
-
-      $('#sex_man').attr("checked",res.data.sex === 'man');
-      $('#sex_female').attr("checked",res.data.sex !== 'man');
-
-      $('#LAY_avatarSrc').val(window.location.protocol+'//'+window.location.host+res.data.avatar);
-
-      $('#cellphone').val(res.data.cellphone);
-
-      $('#email').val(res.data.email);
-
-      $('#remarks').val(res.data.remarks);
-
-      $("#role option[selected]").removeAttr("selected");
-      $("#role option[value="+res.data.role+"]").attr("selected", "selected");
-      $("#role option").each(function(){
-
-        const $item = $(this);
-        const value = Number($item.attr('value'));
-        const disabled = (value !== res.data.role);
-        $item.attr('disabled', disabled)
-      });
-
-      form.render();
-    }
-  });
-
-  form.render();
-  
   //自定义验证
   form.verify({
     nickname: function(value, item){ //value：表单的值、item：表单的DOM对象
@@ -123,15 +85,14 @@ layui.define(['form', 'upload'], function(exports){
     layer.msg(JSON.stringify(obj.field));
     
     //提交修改
-    /*
     admin.req({
-      url: ''
+      url: '/api/upload_user_info/'
+      ,type: "POST"
       ,data: obj.field
-      ,success: function(){
-        
+      ,done: function(){
+
       }
     });
-    */
     return false;
   });
 

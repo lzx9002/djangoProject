@@ -1,9 +1,10 @@
 import platform
 import django
 import psutil
+import os
 from decimal import Decimal
-from django.http import HttpResponse, JsonResponse
-from settings import MEDIA_ROOT
+from django.http import JsonResponse
+from settings import MEDIA_ROOT, MEDIA_URL, STATIC_URL
 from .uploads import getNewName
 from django.views.decorators.csrf import csrf_exempt
 from api.models import User_name_list
@@ -58,7 +59,7 @@ def userinfo(request):
                         "username": token,
                         "user": rows[0].nickname,
                         "sex": rows[0].sex,
-                        "avatar": "/static/media/users/%s" % rows[0].avatar.name,
+                        "avatar": rows[0].avatar,
                         "cellphone": rows[0].cellphone,
                         "email": rows[0].email,
                         "remarks": rows[0].remarks,
@@ -139,7 +140,7 @@ def userList(request):
             user_list["data"].append({
                 "id": user.id,
                 "username": user.nickname,
-                "avatar": "/static/media/users/%s" % user.avatar.name,
+                "avatar": user.avatar,
                 "phone": user.cellphone,
                 "email": user.email,
                 "sex": user.sex,
@@ -150,12 +151,12 @@ def userList(request):
 
 def upload_avatar(request):
     if request.method == 'POST':
+        name = request.POST['token']
         # 获取一个文件管理器对象
         file = request.FILES['file']
-        name = request.POST['token']
-
+        file_type = file.name.split('.')[-1]
         # 保存文件
-        new_name = getNewName('avatar')  # 具体实现在自己写的uploads.py下
+        new_name = getNewName('avatar', user=name, file_type=file_type)  # 具体实现在自己写的uploads.py下
         # 将要保存的地址和文件名称
         where = '%s/users/%s' % (MEDIA_ROOT, new_name)
         # 分块保存image
@@ -163,14 +164,39 @@ def upload_avatar(request):
         with open(where, 'wb') as f:
             for i in content:
                 f.write(i)
-
-        # 上传文件名称到数据库
-        User_name_list.objects.filter(username=name).update(avatar=new_name)
         # 返回的httpresponse
         return JsonResponse({
             "code": 0,
             "msg": "",
             "data": {
-                "url": "/static/media/users/%s" % new_name,
+                "url": "/%s%susers/%s" % (STATIC_URL, MEDIA_URL, new_name),
             }
+        })
+
+
+def upload_user_info(request) :
+    if request.method == 'POST':
+        username = request.POST['token']
+        rows = User_name_list.objects.filter(username=username)
+        nickname = request.POST['nickname']
+        sex = request.POST['sex']
+        avatar = request.POST['avatar']
+        cellphone = request.POST['cellphone']
+        email = request.POST['email']
+        try:
+            remarks = request.POST['remarks']
+        except KeyError:
+            remarks = rows[0].remarks
+        rows.update(
+            nickname=nickname,
+            sex=sex,
+            avatar=avatar,
+            cellphone=cellphone,
+            email=email,
+            remarks=remarks,
+        )
+        return JsonResponse({
+            "code": 0,
+            "msg": "",
+            "data": {}
         })
