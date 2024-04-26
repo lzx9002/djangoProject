@@ -8,7 +8,7 @@ from djangoProject.settings import MEDIA_ROOT, MEDIA_URL, STATIC_URL
 from .uploads import getNewName
 from django.views.decorators.csrf import csrf_exempt
 from api.models import User_name_list
-from .cpuUsage import histories
+from djangoProject.cpuUsage import histories
 
 
 # Create your views here.
