@@ -4,7 +4,7 @@ import psutil
 import os
 from decimal import Decimal
 from django.http import JsonResponse
-from settings import MEDIA_ROOT, MEDIA_URL, STATIC_URL
+from djangoProject.settings import MEDIA_ROOT, MEDIA_URL, STATIC_URL
 from .uploads import getNewName
 from django.views.decorators.csrf import csrf_exempt
 from api.models import User_name_list
