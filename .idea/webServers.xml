@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="cd4db050-04bb-48db-afff-35f17e9697b8" name="5ibc.cn SFTP">
+        <fileTransfer accessType="SFTP" host="ssh.5ibc.cn" port="22" sshConfigId="38e13412-dacd-44b0-b20c-6ca3e7af94c7" sshConfig="root@ssh.5ibc.cn:22 key" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

@@ -8,16 +8,12 @@ https://docs.djangoproject.com/en/5.0/howto/deployment/wsgi/
 """
 
 import os
-import threading,cpuUsage
-from pyfiglet import Figlet
+import threading
 
 from django.core.wsgi import get_wsgi_application
+from djangoProject import cpuUsage
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'djangoProject.settings')
-
-f = Figlet(font='Alpha')
-text = f.renderText('lzx')
-print(text)
 
 application = get_wsgi_application()
 
