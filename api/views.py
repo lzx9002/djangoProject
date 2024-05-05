@@ -174,7 +174,7 @@ def upload_avatar(request):
         })
 
 
-def upload_user_info(request) :
+def upload_user_info(request):
     if request.method == 'POST':
         username = request.POST['token']
         rows = User_name_list.objects.filter(username=username)
