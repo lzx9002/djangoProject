@@ -15,3 +15,11 @@ def getNewName(file_name, user, file_type):
     new_name += '.' + file_type
     # 返回字符串
     return new_name
+
+
+def Request_processing(request):
+    request_list = str(request, encoding="gbk").split('&')
+    for i in request_list:
+        request_json_list = i.split('=')
+        request.POTS[request_json_list[0]] = request_json_list[1]
+    return request

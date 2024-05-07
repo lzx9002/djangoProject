@@ -1,11 +1,11 @@
 import platform
 import django
 import psutil
-import os
+import json
 from decimal import Decimal
 from django.http import JsonResponse
 from djangoProject.settings import MEDIA_ROOT, MEDIA_URL, STATIC_URL
-from .uploads import getNewName
+from .uploads import getNewName,Request_processing
 from django.views.decorators.csrf import csrf_exempt
 from api.models import User_name_list
 from djangoProject.cpuUsage import histories
@@ -174,8 +174,35 @@ def upload_avatar(request):
         })
 
 
+# def upload_user_info(request):
+#     if request.method == 'POST':
+#         username = request.POST['token']
+#         rows = User_name_list.objects.filter(username=username)
+#         nickname = request.POST['nickname']
+#         sex = request.POST['sex']
+#         avatar = request.POST['avatar']
+#         cellphone = request.POST['cellphone']
+#         email = request.POST['email']
+#         try:
+#             remarks = request.POST['remarks']
+#         except KeyError:
+#             remarks = rows[0].remarks
+#         rows.update(
+#             nickname=nickname,
+#             sex=sex,
+#             avatar=avatar,
+#             cellphone=cellphone,
+#             email=email,
+#             remarks=remarks,
+#         )
+#         return JsonResponse({
+#             "code": 0,
+#             "msg": "",
+#             "data": {}
+#         })
 def upload_user_info(request):
-    if request.method == 'POST':
+    if request.method == 'PUT':
+        request = Request_processing(request)
         username = request.POST['token']
         rows = User_name_list.objects.filter(username=username)
         nickname = request.POST['nickname']

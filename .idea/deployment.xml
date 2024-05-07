@@ -6,7 +6,7 @@
       <paths name="5ibc.cn SFTP">
         <serverdata>
           <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/root/django" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

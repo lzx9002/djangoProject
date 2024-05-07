@@ -22,9 +22,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-=89s856b(-lzopz6gf%yp*y3f!8t82=s9*6tsy&*#24nggi93#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'ssh.5ibc.cn']
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -77,7 +77,7 @@ DATABASES = {
         {
             'ENGINE': 'django.db.backends.mysql',  # 数据库引擎
             'NAME': 'django',  # 数据库名称
-            'HOST': 'ssh.5ibc.cn',  # 数据库地址，本机 ip 地址 127.0.0.1
+            'HOST': '127.0.0.1',  # 数据库地址，本机 ip 地址 127.0.0.1
             'PORT': 3306,  # 端口
             'USER': 'root',  # 数据库用户名
             'PASSWORD': 'lzx@801234',  # 数据库密码
