@@ -98,14 +98,14 @@ layui.define(function(exports){
           options.series[0].data = data.cpu;
           options.series[1].data = data.memory;
 
-          function renderDataView() {
+          function renderDataView(index) {
 
             echartsApp = echarts.init($dataview[0], layui.echartsTheme);
             echartsApp.setOption(options);
 
             //
             admin.resize(function () {
-              echartsApp.resize();
+              echartsApp[index].resize();
             });
 
             //监听侧边伸缩
